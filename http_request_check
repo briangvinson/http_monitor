@@ -1,0 +1,34 @@
+import requests
+import time
+from datetime import datetime
+
+
+def writEResult(data, filEName):
+    file = open(filEName, "a")
+    file.write(data)
+    file.close()
+
+def geTRequest(URL, status, interval, reporTFile):
+    while True:
+        print 'Time:',datetime.now()
+        response = requests.get(URL)
+        print 'Current HTTP Responce Code',response.status_code
+        output = str(datetime.now()) + ' ' + str(response.status_code) + "\n"
+        writEResult(output, reporTFile)
+        ##print 'sleeping:',str(datetime.now()),response.headers
+        time.sleep(interval)
+        if response.status_code != status:
+            print 'Curent Status Code does not match ',status,' leaving monitor'
+            break
+
+
+
+
+#Master Loop
+while True:
+    #Input HTTP Monitor elements
+    URL = input('Enter the test URL: ')
+    status = input('Enter the expected status code: ')
+    interval = input('Enter the test interval: ')
+    reporTFile = input('Enter the name of the Report file: ')
+    geTRequest(URL, status, interval,reporTFile)
